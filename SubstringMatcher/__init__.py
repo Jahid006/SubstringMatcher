@@ -1,3 +1,3 @@
 from .approach import Approach
-from .exact_matching import ExactMatching
-from .fuzzy_matching import FuzzyMatching
+from .exact_matching import ExactMatcher
+from .fuzzy_matching import FuzzyMatcher
