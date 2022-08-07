@@ -1,7 +1,7 @@
 from .approach import Approach
 
  
-class ExactMatching(Approach):
+class ExactMatcher(Approach):
     def __init__(self, text: list, query_text: str, threshold: int) -> None:
         super().__init__(text, query_text, threshold)
         
