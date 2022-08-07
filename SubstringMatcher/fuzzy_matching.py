@@ -7,7 +7,7 @@ from .approach import Approach
 
 
 
-class FuzzyMatching(Approach):
+class FuzzyMatcher(Approach):
     def __init__(self, text, query_text, threshold) -> None:
         super().__init__(text, query_text, threshold)
         
