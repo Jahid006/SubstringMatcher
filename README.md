@@ -45,7 +45,7 @@ Some Texts are smaller than query text; may yield undesirable results [-_-]
 
 ```
 
-#### You can do for Exact Substring Match too
+#### You can do Exact Substring Matching too
 
 ```python
 from SubstringMatcher import ExactMatcher
