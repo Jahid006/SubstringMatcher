@@ -51,8 +51,8 @@ class FuzzyMatcher(Approach):
         
         
         if longest_matching_block.size >= len(query_text) - threshold:
-            return (longest_matching_block.a, 
-                    longest_matching_block.a + longest_matching_block.size)  
+            return [longest_matching_block.a, 
+                    longest_matching_block.a + longest_matching_block.size] 
             
         matching_blocks = list(sq.get_matching_blocks())
         matched_chars = sum([block.size for block in matching_blocks])
