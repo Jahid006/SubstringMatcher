@@ -21,8 +21,8 @@ pprint(matcher.match(get_span=True))
 ```
 Output: 
 
-[output(text='another fuzzywuzzy copycat', verdict=True, similarity=90, error=10, span=(10, 18)),
- output(text='or it is better than fuzzywuzzy', verdict=True, similarity=90, error=10, span=(23, 31))]
+[output(text='another fuzzywuzzy copycat', verdict=True, similarity=90, error=10, span=[10, 18]),
+ output(text='or it is better than fuzzywuzzy', verdict=True, similarity=90, error=10, span=[23, 31])]
 ```
 #### Lets find topK matches
 
@@ -39,9 +39,9 @@ pprint(matcher.match(topK=3,get_span=True))
 Output: 
 Some Texts are smaller than query text; may yield undesirable results [-_-]
 
-[output(text='another fuzzywuzzy', verdict=True, similarity=90, error=10, span=(10, 18)),
- output(text='or it is better than fuzzywuzzy', verdict=True, similarity=90, error=10, span=(23, 31)),
- output(text='pfzy package is better than fuzzywuzzy', verdict=True, similarity=90, error=10, span=(30, 38))]
+[output(text='another fuzzywuzzy', verdict=True, similarity=90, error=10, span=[10, 18]),
+ output(text='or it is better than fuzzywuzzy', verdict=True, similarity=90, error=10, span=[23, 31]),
+ output(text='pfzy package is better than fuzzywuzzy', verdict=True, similarity=90, error=10, span=[30, 38])]
 
 ```
 
