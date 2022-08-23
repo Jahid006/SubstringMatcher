@@ -68,3 +68,70 @@ Some Texts are smaller than query text; may yield undesirable results [-_-]
  output(text='another fuzzywuzzy', verdict=False, similarity=0, error=100, span=[-1, -1])]
 
 ```
+#### Comparison with Fuzzywuzzy and DiffLib
+```
+from fuzzywuzzy import fuzz, process
+from difflib import SequenceMatcher
+from SubstringMatcher import FuzzyMatcher, ExactMatcher
+from pprint import pprint
+
+
+data = [('zxxy', ['abcdzxcy']),    # Should found a match
+        ('zxxy', ['zabcdxcxy']),   # Should not found a match
+        ('zxxy', ['zabcdxxdy']),   # Should not found a match
+        ('zxxy', ['zdddxdddxddy']),# Should not found a match
+        ]
+
+
+for datum in data:
+    query_text, searchble_text = datum
+    print(f"{'*'*10} {query_text = } || {searchble_text = } {'*'*10}\n")
+    print(f"FuzzyWuzzy(No Span): {list(process.extractWithoutOrder('zxxy', ['abcdzxcy'], scorer= fuzz.partial_ratio))}\n")
+    sq = SequenceMatcher(None, searchble_text[0], query_text)
+    print(f"Difflib: {sq.find_longest_match(0, len(searchble_text[0]), 0, len(query_text))}\n")
+    
+    matcher = FuzzyMatcher(text = searchble_text, query_text = query_text, threshold=1)
+    print(f"SubstringMatcher: {matcher.match(get_span=True)}")
+    print('\n\n')
+```
+```
+Outputs:
+********** query_text = 'zxxy' || searchble_text = ['abcdzxcy'] **********
+
+FuzzyWuzzy(No Span): [('abcdzxcy', 75)]
+
+Difflib: Match(a=4, b=0, size=2)
+
+SubstringMatcher: [output(text='abcdzxcy', verdict=True, similarity=75, error=25, span=[4, 8])]
+
+
+
+********** query_text = 'zxxy' || searchble_text = ['zabcdxcxy'] **********
+
+FuzzyWuzzy(No Span): [('abcdzxcy', 75)]
+
+Difflib: Match(a=7, b=2, size=2)
+
+SubstringMatcher: [output(text='zabcdxcxy', verdict=False, similarity=75, error=25, span=[-1, -1])]
+
+
+
+********** query_text = 'zxxy' || searchble_text = ['zabcdxxdy'] **********
+
+FuzzyWuzzy(No Span): [('abcdzxcy', 75)]
+
+Difflib: Match(a=5, b=1, size=2)
+
+SubstringMatcher: [output(text='zabcdxxdy', verdict=False, similarity=75, error=25, span=[-1, -1])]
+
+
+
+********** query_text = 'zxxy' || searchble_text = ['zdddxdddxddy'] **********
+
+FuzzyWuzzy(No Span): [('abcdzxcy', 75)]
+
+Difflib: Match(a=0, b=0, size=1)
+
+SubstringMatcher: [output(text='zdddxdddxddy', verdict=False, similarity=50, error=50, span=[-1, -1])]
+
+```
