@@ -20,6 +20,7 @@ pprint(matcher.match(get_span=True))
 ```
 ```
 Output: 
+Returns a list of NamedTuple of type 'namedtuple('output',['text','verdict', 'similarity', 'error', 'span'])'
 
 [output(text='another fuzzywuzzy copycat', verdict=True, similarity=90, error=10, span=[10, 18]),
  output(text='or it is better than fuzzywuzzy', verdict=True, similarity=90, error=10, span=[23, 31])]
