@@ -69,7 +69,7 @@ Some Texts are smaller than query text; may yield undesirable results [-_-]
 
 ```
 #### Comparison with Fuzzywuzzy and DiffLib
-```
+```python
 from fuzzywuzzy import fuzz, process
 from difflib import SequenceMatcher
 from SubstringMatcher import FuzzyMatcher, ExactMatcher
