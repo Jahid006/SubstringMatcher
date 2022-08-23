@@ -18,7 +18,7 @@ query_string = 'fazzywuzzy?'
 matcher = FuzzyMatcher(text = strings_to_be_searched_in, query_text = query_string)
 pprint(matcher.match(get_span=True))
 ```
-##### Returns a list of NamedTuple of type 'namedtuple('output',['text','verdict', 'similarity', 'error', 'span'])'
+Returns a list of NamedTuple of type namedtuple('output',['text','verdict', 'similarity', 'error', 'span'])
 ```
 Output: 
 
