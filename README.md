@@ -135,3 +135,6 @@ Difflib: Match(a=0, b=0, size=1)
 SubstringMatcher: [output(text='zdddxdddxddy', verdict=False, similarity=50, error=50, span=[-1, -1])]
 
 ```
+
+#### To Do:
+Code optimization and bug fix
