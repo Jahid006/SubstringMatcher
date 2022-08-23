@@ -20,6 +20,7 @@ class FuzzyMatcher(Approach):
         if get_span:
             self.spans = list(map(lambda x: self._get_span(*x), zip(self.text, [self.query_text]*len(self.text), 
                                                                 self.verdicts, [self.threshold]*len(self.text))))
+            self.verdicts = [v if (s[0]!=-1 and s[1]!=-1) else False for v,s in zip(self.verdicts, self.spans)]
         
         self._format_output()
         if sort: self.sort()
@@ -80,7 +81,8 @@ class FuzzyMatcher(Approach):
                 
                 if matched_char_so_far>= len(query_text):
                     break
-                    
+                
+        if span[1]-span[0]>len(query_text) - threshold:       
             return span            
         else:
             return [-1,-1]
