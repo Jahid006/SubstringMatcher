@@ -41,7 +41,7 @@ class FuzzyMatcher(Approach):
         self.error_scores = 100 - self.similarity_scores
         length_diff = np.array([len(x) for x in self.text]) - len(self.query_text)
         self.verdicts = self.similarity_scores >= 100 - error_threshold_percentage 
-        self.verdicts[length_diff<self.threshold] = False 
+        self.verdicts[length_diff<-self.threshold] = False 
         
      
     def _get_span(self,text, query_text, verdict, threshold):
@@ -49,7 +49,6 @@ class FuzzyMatcher(Approach):
         if verdict == False: return [-1,-1] 
         sq = SequenceMatcher(None, text, query_text)
         longest_matching_block = sq.find_longest_match(0, len(text), 0, len(query_text))
-        
         
         if longest_matching_block.size >= len(query_text) - threshold:
             return [longest_matching_block.a, 
@@ -59,29 +58,31 @@ class FuzzyMatcher(Approach):
         matched_chars = sum([block.size for block in matching_blocks])
         
         span = [-1,-1]
-        
         if (matched_chars >= (len(query_text) - threshold) 
                 and len(matching_blocks)>1):
+            matching_blocks = matching_blocks[:-1]  #last match is not necessary
             
             block_distance = [0, 0]
             matched_char_so_far = matching_blocks[0].size
             span  = [matching_blocks[0].a, matching_blocks[0].a + matching_blocks[0].size]
-
-            for i in range(1, len(matching_blocks)-1):
+            
+            i = 1
+            while(i<len(matching_blocks)):
                 prev_block, current_block = matching_blocks[i-1], matching_blocks[i]
                 
-
-                block_distance = block_distance[0] + (current_block.a - (prev_block.a + prev_block.size)), \
-                                 block_distance[1] + (current_block.b - (prev_block.b + prev_block.size))
+                block_distance = [block_distance[0] + (current_block.a - (prev_block.a + prev_block.size)), \
+                                  block_distance[1] + (current_block.b - (prev_block.b + prev_block.size))]
+                                 
                                 
-                if ((block_distance[0]> threshold or block_distance[1]>threshold)
-                        and span[1]-span[0]>threshold):
-                    break
-                else:
-                    matched_char_so_far = 0
-                    block_distance = [0, 0]
-                    if i <= len(matching_blocks)-2:
-                        span = [matching_blocks[i+1].a, matching_blocks[i+1].a + matching_blocks[i+1].size]
+                if ((block_distance[0]> threshold or block_distance[1]>threshold)):
+                    if  span[1]-span[0]<=threshold and i <= len(matching_blocks)-1:
+                        matched_char_so_far = 0
+                        span = [matching_blocks[i].a, matching_blocks[i].a + matching_blocks[i].size]
+                        block_distance = [0, 0]
+                        i += 1
+                        #                     [- (current_block.a - (prev_block.a + prev_block.size)), \
+                        #                   - (current_block.b - (prev_block.b + prev_block.size))]
+                        continue
                     else:
                         break
 
@@ -90,14 +91,11 @@ class FuzzyMatcher(Approach):
                 
                 if matched_char_so_far>= len(query_text):
                     break 
+                i += 1
                 
             if span[1]-span[0]>len(query_text) - threshold:       
-                return span
-            else:
-                return [-1,-1]
-                            
-        else:
-            return [-1,-1]
+                return span                            
+        return [-1,-1]
         
 
   

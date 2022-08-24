@@ -79,26 +79,37 @@ from SubstringMatcher import FuzzyMatcher, ExactMatcher
 from pprint import pprint
 
 
-data = [('zxxy', ['abcdzxcy']),    # Should be a match
-        ('zxxy', ['zabcdxcxy']),   # Should not be a match
-        ('zxxy', ['zabcdxxdy']),   # Should not be a match
-        ('zxxy', ['zdddxdddxddy']),# Should not be a match
+data = [('zxxy', ['zxxy']),        # Should be a match
+        ('zxxy', ['abcdzxcy']),    # Should be a match 'zxcy'
+        ('zxxy', ['zabcdxcxy']),   # Should be a match 'xcxy' 
+        ('zxxy', ['zabcdxxdy']),   # Should be a match 'xxdy'
+        ('zxxy', ['zdddxdddxddy']) # Should not be a match
         ]
 
 
-for datum in data:
+for datum in data[:]:
     query_text, searchble_text = datum
     print(f"{'*'*10} {query_text = } || {searchble_text = } {'*'*10}\n")
-    print(f"FuzzyWuzzy(No Span): {list(process.extractWithoutOrder('zxxy', ['abcdzxcy'], scorer= fuzz.partial_ratio))}\n")
+    print(f"FuzzyWuzzy(No Span): {list(process.extractWithoutOrder(query_text, searchble_text, scorer= fuzz.partial_ratio))}\n")
     sq = SequenceMatcher(None, searchble_text[0], query_text)
     print(f"Difflib: {sq.find_longest_match(0, len(searchble_text[0]), 0, len(query_text))}\n")
     
-    matcher = FuzzyMatcher(text = searchble_text, query_text = query_text, threshold=1)
+    matcher = FuzzyMatcher(text = searchble_text, query_text = query_text)
     print(f"SubstringMatcher: {matcher.match(get_span=True)}")
     print('\n\n')
 ```
 ```
 Outputs:
+********** query_text = 'zxxy' || searchble_text = ['zxxy'] **********
+
+FuzzyWuzzy(No Span): [('zxxy', 100)]
+
+Difflib: Match(a=0, b=0, size=4)
+
+SubstringMatcher: [output(text='zxxy', verdict=True, similarity=100, error=0, span=[0, 4])]
+
+
+
 ********** query_text = 'zxxy' || searchble_text = ['abcdzxcy'] **********
 
 FuzzyWuzzy(No Span): [('abcdzxcy', 75)]
@@ -111,27 +122,27 @@ SubstringMatcher: [output(text='abcdzxcy', verdict=True, similarity=75, error=25
 
 ********** query_text = 'zxxy' || searchble_text = ['zabcdxcxy'] **********
 
-FuzzyWuzzy(No Span): [('abcdzxcy', 75)]
+FuzzyWuzzy(No Span): [('zabcdxcxy', 75)]
 
 Difflib: Match(a=7, b=2, size=2)
 
-SubstringMatcher: [output(text='zabcdxcxy', verdict=False, similarity=75, error=25, span=[-1, -1])]
+SubstringMatcher: [output(text='zabcdxcxy', verdict=True, similarity=75, error=25, span=[5, 9])]
 
 
 
 ********** query_text = 'zxxy' || searchble_text = ['zabcdxxdy'] **********
 
-FuzzyWuzzy(No Span): [('abcdzxcy', 75)]
+FuzzyWuzzy(No Span): [('zabcdxxdy', 75)]
 
 Difflib: Match(a=5, b=1, size=2)
 
-SubstringMatcher: [output(text='zabcdxxdy', verdict=False, similarity=75, error=25, span=[-1, -1])]
+SubstringMatcher: [output(text='zabcdxxdy', verdict=True, similarity=75, error=25, span=[5, 9])]
 
 
 
 ********** query_text = 'zxxy' || searchble_text = ['zdddxdddxddy'] **********
 
-FuzzyWuzzy(No Span): [('abcdzxcy', 75)]
+FuzzyWuzzy(No Span): [('zdddxdddxddy', 50)]
 
 Difflib: Match(a=0, b=0, size=1)
 
