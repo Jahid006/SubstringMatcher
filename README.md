@@ -1,10 +1,13 @@
 ## SubstringMatcher
 ### Fuzzy Substring Matching using Fuzzywuzzy and Difflib. 
+#### Why use this instead of Fuzzywuzzy or DiffLib 
+> - Fuzzywuzzy only outputs similarity score, not the span
+> - DiffLib outputs spans and matching blocks, but fails to return correct span in some cases(see in comparison)
 
 
-#### Usecase:
+#### SubstringMatcher Usecase:
 > - Fuzzy (sub)string matching with similarity score and span detection
-> - User defined character-level error tolerance
+> - User defined character-level error(mismatch) tolerance
 > - Find TopK matches
 
 
@@ -76,10 +79,10 @@ from SubstringMatcher import FuzzyMatcher, ExactMatcher
 from pprint import pprint
 
 
-data = [('zxxy', ['abcdzxcy']),    # Should found a match
-        ('zxxy', ['zabcdxcxy']),   # Should not found a match
-        ('zxxy', ['zabcdxxdy']),   # Should not found a match
-        ('zxxy', ['zdddxdddxddy']),# Should not found a match
+data = [('zxxy', ['abcdzxcy']),    # Should be a match
+        ('zxxy', ['zabcdxcxy']),   # Should not be a match
+        ('zxxy', ['zabcdxxdy']),   # Should not be a match
+        ('zxxy', ['zdddxdddxddy']),# Should not be a match
         ]
 
 
