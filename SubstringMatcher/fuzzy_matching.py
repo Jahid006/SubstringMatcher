@@ -58,7 +58,8 @@ class FuzzyMatcher(Approach):
         matching_blocks = list(sq.get_matching_blocks())
         matched_chars = sum([block.size for block in matching_blocks])
         
-  
+        span = [-1,-1]
+        
         if (matched_chars >= (len(query_text) - threshold) 
                 and len(matching_blocks)>1):
             
@@ -73,17 +74,28 @@ class FuzzyMatcher(Approach):
                 block_distance = block_distance[0] + (current_block.a - (prev_block.a + prev_block.size)), \
                                  block_distance[1] + (current_block.b - (prev_block.b + prev_block.size))
                                 
-                if sum(block_distance)/2> threshold:
+                if ((block_distance[0]> threshold or block_distance[1]>threshold)
+                        and span[1]-span[0]>threshold):
                     break
-                
+                else:
+                    matched_char_so_far = 0
+                    block_distance = [0, 0]
+                    if i <= len(matching_blocks)-2:
+                        span = [matching_blocks[i+1].a, matching_blocks[i+1].a + matching_blocks[i+1].size]
+                    else:
+                        break
+
                 matched_char_so_far += current_block.size
                 span[1] = current_block.a + current_block.size
                 
                 if matched_char_so_far>= len(query_text):
-                    break
+                    break 
                 
-        if span[1]-span[0]>len(query_text) - threshold:       
-            return span            
+            if span[1]-span[0]>len(query_text) - threshold:       
+                return span
+            else:
+                return [-1,-1]
+                            
         else:
             return [-1,-1]
         
