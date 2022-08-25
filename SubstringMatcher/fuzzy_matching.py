@@ -13,6 +13,16 @@ class FuzzyMatcher(Approach):
         
         
     def match(self, topK = None,  get_span = False, sort = True):
+        """performs query text matching against given searchable text list and return a list of matches
+
+        Args:
+            topK (int, optional): to return topK matches. Defaults to None.
+            get_span (bool, optional): to return match spam. Defaults to False.
+            sort (bool, optional): to return sorted matches. Defaults to True.
+
+        Returns:
+            list[namedtuple]: a list of namedtuple('output',['text','verdict', 'similarity', 'error', 'span'])
+        """
         error_threshold_percentage = int(100*self.threshold/len(self.query_text))
         
         self._compute(topK, error_threshold_percentage)
